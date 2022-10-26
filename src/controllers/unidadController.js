@@ -1,86 +1,70 @@
-import { getConnection } from "../database/database";
+import {unidad} from '../models/unidadModel'
 
-const getUnidades = async (req, res) => {
+export const getUnidades = async (req, res) => {
   try {
-    const connection = await getConnection();
-    const result = await connection.query("SELECT * FROM unidad");
+    const result = await unidad.findAll();
     res.json(result);
   } catch (error) {
-    res.status(500);
-    res.send(error.message);
+    res.status(500).json({message: error.message});
   }
 };
-const getUnidad = async (req, res) => {
+export const getUnidad = async (req, res) => {
   try {
     const { id } = req.params;
-    const connection = await getConnection();
-    const result = await connection.query("SELECT * FROM unidad WHERE id = ?",id);
+    const result = await unidad.findByPk(id);
     res.json(result);
   } catch (error) {
-    res.status(500);
-    res.send(error.message);
+    res.status(500).json({message: error.message})
   }
 };
-const postUnidad = async (req, res) => {
+export const postUnidad = async (req, res) => {
   try {
     const { idCliente, año, marca, modelo, motor} = req.body;
     if (idCliente <= 0) {
       res.status(400).json({ message: "Bad Request, pleas fill all required field" });
     }
-    const unidad = {
+    const newUnidad = {
       idCliente,
       año,
       marca,
       modelo,
       motor
     };
-    const connection = await getConnection();
-    await connection.query("INSERT INTO unidad SET ?", cliente);
+    await unidad.create(newUnidad);
     res.json({ message: "Unidad agregada correctamente" });
   } catch (error) {
-    res.status(500);
-    res.send(error.message);
+    res.status(500).json({message: error.message});
   }
 };
-const updateUnidad = async (req, res) => {
+export const updateUnidad = async (req, res) => {
   try {
     const { idCliente, año, marca, modelo, motor } = req.body;
     const { id } = req.params;
-    if (id <= 0 || nombre === undefined || celular <= 0) {
+    if (id <= 0 ) {
       res.status(400).json({ message: "Bad Request, pleas fill all required field" });
     }
-    const unidad = {
-      id,
-      idCliente,
-      año,
-      marca,
-      modelo,
-      motor
-    };
-    const connection = await getConnection();
-    const result = await connection.query("UPDATE unidad SET ? WHERE id = ?",[unidad, id]);
-    res.json(result);
+    const result = await unidad.findByPk(id);
+    result.idCliente = idCliente;
+    result.año = año;
+    result.marca = marca;
+    result.modelo = modelo;
+    result.motor = motor;
+    result.save();
+    res.json({message: 'Unidad actualizada correctamente', response:result});
   } catch (error) {
-    res.status(500);
-    res.send(error.message);
+    res.status(500).json({message: error.message});
   }
 };
-const deleteUnidad = async (req, res) => {
+export const deleteUnidad = async (req, res) => {
   try {
     const { id } = req.params;
-    const connection = await getConnection();
-    const result = await connection.query(
-      "DELETE FROM unidad WHERE id = ?",id);
-    res.json(result);
+    await unidad.destroy({
+      where: {
+        id: id
+      }
+    });
+    res.sendStatus(204);
   } catch (error) {
-    res.status(500);
-    res.send(error.message);
+    res.status(500).json({message: error.message});
   }
-};
-export const methods = {
-  getUnidades,
-  getUnidad,
-  postUnidad,
-  updateUnidad,
-  deleteUnidad,
 };

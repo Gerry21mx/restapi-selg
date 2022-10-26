@@ -1,12 +1,12 @@
 import { Router } from "express";
-import { methods as unidadController } from "../controllers/unidadController";
+import { getUnidades, getUnidad, postUnidad, updateUnidad, deleteUnidad } from "../controllers/unidadController";
 
 const router = Router();
 
-router.get("/", unidadController.getUnidades);
-router.get("/:id", unidadController.getUnidad);
-router.post("/", unidadController.postUnidad);
-router.put("/:id", unidadController.updateUnidad);
-router.delete("/:id", unidadController.deleteUnidad);
+router.get("/api/unidad", getUnidades);
+router.get("/api/unidad/:id", getUnidad);
+router.post("/api/unidad", postUnidad);
+router.put("/api/unidad/:id", updateUnidad);
+router.delete("/api/unidad/:id", deleteUnidad);
 
 export default router;

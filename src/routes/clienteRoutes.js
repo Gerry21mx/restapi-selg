@@ -1,12 +1,13 @@
 import { Router } from "express";
-import { methods as clienteController } from "../controllers/clienteController";
+import { deleteCliente, getCliente, getClientes, postCliente, updateCliente, getUnidadCliente} from "../controllers/clienteController";
 
 const router = Router();
 
-router.get("/", clienteController.getClientes);
-router.get("/:id", clienteController.getCliente);
-router.post("/", clienteController.postCliente);
-router.put("/:id", clienteController.updateCliente);
-router.delete("/:id", clienteController.deleteCliente);
+router.get("/api/cliente", getClientes);
+router.get("/api/cliente/:id", getCliente);
+router.get("/api/cliente/:id/unidad", getUnidadCliente);
+router.post("/api/cliente", postCliente);
+router.put("/api/cliente/:id", updateCliente);
+router.delete("/api/cliente/:id", deleteCliente);
 
 export default router;
